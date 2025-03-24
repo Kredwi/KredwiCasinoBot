@@ -1,6 +1,5 @@
 package ru.kredwi.casinobot.embeds;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import ru.kredwi.casinobot.CasinoBot;
 import ru.kredwi.casinobot.exception.GameNotFinished;
@@ -9,8 +8,11 @@ import ru.kredwi.casinobot.games.IGames;
 import ru.kredwi.casinobot.locale.LocaleMessagesKeys;
 import ru.kredwi.casinobot.locale.MainLocale;
 
-public class SlotEmbed extends EmbedBuilder implements IGameEmbed {
+public class SlotEmbed extends GameEmbedBuilder {
 	
+	/**
+	 * Dad, can you please refactor this?
+	 * */
 	private final int[][] toIntArray(Object o) {
 		if (o instanceof int[][]) {
 			return (int[][]) o;
@@ -33,15 +35,13 @@ public class SlotEmbed extends EmbedBuilder implements IGameEmbed {
 		}
 		
 		setDescription(builder.toString());
-		addField(MainLocale.getResource(lang, LocaleMessagesKeys.GAMES_GENERAL_DEPOSIT), String.format(DEPOSIT_SHOW_PATTERN,deposit), true);
+		
+		setMathResult(game, deposit, lang);
 		
 		if (game.isWin()) {
-			addField(MainLocale.getResource(lang, LocaleMessagesKeys.GAMES_GENERAL_PRIZE), String.format(DEPOSIT_SHOW_PATTERN, game.getPrize(deposit)), true);
-			addField(MainLocale.getResource(lang, LocaleMessagesKeys.GAMES_GENERAL_STREAK), String.valueOf(game.getWinCount()), true);
-			getExampleWin(this, lang);
-		} else {
-			getExampleLose(this, lang);
+			addField(getLocalText(lang, LocaleMessagesKeys.GAMES_GENERAL_STREAK), String.valueOf(game.getWinCount()), true);
 		}
-		setCustomFooter(this, game.getGameUUID(), lang);
+		
+		setCustomFooter(game.getGameUUID(), lang);
 	}
 }

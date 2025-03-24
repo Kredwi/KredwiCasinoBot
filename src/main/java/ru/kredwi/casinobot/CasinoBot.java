@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
 import ru.kredwi.casinobot.command.CommandHandler;
-import ru.kredwi.casinobot.events.MessageReceivedListener;
 import ru.kredwi.casinobot.events.ReadyListener;
 import ru.kredwi.casinobot.events.SlashCommandListener;
 import ru.kredwi.casinobot.sql.DBInitilization;
@@ -59,7 +58,7 @@ public class CasinoBot {
   private void start() {
     try {
       jda = JDABuilder.createLight(config.getProperty("token"), getGatewayIntent())
-          .addEventListeners(new MessageReceivedListener())
+//          .addEventListeners(new MessageReceivedListener())
           .addEventListeners(new SlashCommandListener())
           .addEventListeners(new ReadyListener())
           .setRequestTimeoutRetry(true)

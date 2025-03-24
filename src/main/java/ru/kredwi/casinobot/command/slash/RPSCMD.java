@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import ru.kredwi.casinobot.command.IErrorCommand;
 import ru.kredwi.casinobot.command.ISlashCommand;
 import ru.kredwi.casinobot.embeds.RPSEmbed;
+import ru.kredwi.casinobot.enums.RPSEnum;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
 import ru.kredwi.casinobot.games.IGames;
@@ -25,13 +26,14 @@ public class RPSCMD implements ISlashCommand, IErrorCommand {
                 .addChoice("SCISSORS", "SCISSORS");
 		return Commands.slash(RPS_GAME_COMMAND, "Play this happy game :)")
 				.addOption(OptionType.NUMBER, "deposit", "Write your deposit!", true)
-				.addOptions(option)
-				.addOption(OptionType.USER, "opponent", "Select your opponent!");
+				.addOptions(option);
+				// .addOption(OptionType.USER, "opponent", "Select your opponent!");
 	}
 
 	@Override
 	public void execute(SlashCommandInteractionEvent commandEvent, String lang) {
 		final User user = commandEvent.getUser();
+		
 		String choice = commandEvent.getOption("choice").getAsString();
 		double deposit = commandEvent.getOption("deposit").getAsDouble();
 		
@@ -43,10 +45,13 @@ public class RPSCMD implements ISlashCommand, IErrorCommand {
 		IGames game = new RPS(choice);
 
 		try {
+			RPSEnum[] gameResult = (RPSEnum[]) game.getGameResult();
 			if (game.isWin()) {
 				JDBCActions.addUserWin(user.getIdLong(), 1);
 				JDBCActions.addUserBalance(user.getIdLong(), game.getPrize(deposit) + deposit);
-			} else {
+			} else if (gameResult[0].equals(gameResult[1])) {
+				JDBCActions.addUserBalance(user.getIdLong(), deposit);
+			}else {
 				JDBCActions.addUserLose(user.getIdLong(), 1);
 			}
 			MessageEmbed embed = new RPSEmbed(game, deposit, commandEvent).build();
