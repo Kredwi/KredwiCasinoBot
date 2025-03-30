@@ -4,13 +4,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import ru.kredwi.casinobot.enums.CoinSide;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
-import ru.kredwi.casinobot.games.IGames;
+import ru.kredwi.casinobot.games.Game;
 import ru.kredwi.casinobot.locale.LocaleMessagesKeys;
 import ru.kredwi.casinobot.locale.MainLocale;
 
 public class CoinEmbed extends GameEmbedBuilder {
 	
-	public CoinEmbed(IGames game, double deposit, SlashCommandInteractionEvent cmd) throws GameNotFinished, LocaleKeyNotFound {
+	public CoinEmbed(Game game, double deposit, SlashCommandInteractionEvent cmd) throws GameNotFinished, LocaleKeyNotFound {
 		CoinSide[] gameResult = (CoinSide[]) game.getGameResult();
 		String lang = MainLocale.getUserLangFromDB(cmd.getUser(), cmd.getGuild().getLocale().toString());
 		

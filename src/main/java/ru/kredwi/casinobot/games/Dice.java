@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import ru.kredwi.casinobot.exception.GameNotFinished;
 
-public class Dice implements IGames {
+public class Dice extends Game {
 
 	private static final String[] ICONS = new String[] {
 			"⬜️", "⬛️"

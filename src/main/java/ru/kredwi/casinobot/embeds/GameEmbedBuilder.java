@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
-import ru.kredwi.casinobot.games.IGames;
+import ru.kredwi.casinobot.games.Game;
 import ru.kredwi.casinobot.locale.LocaleMessagesKeys;
 
 import static ru.kredwi.casinobot.locale.MainLocale.getResource;
@@ -33,7 +33,7 @@ public class GameEmbedBuilder extends EmbedBuilder {
 		setTitle(getLocalText(lang, LocaleMessagesKeys.GAMES_GENERAL_LOSE));
 		setColor(LOSE_COLOR);
 	}
-	protected void setMathResult(IGames game, double deposit, String lang) throws LocaleKeyNotFound, GameNotFinished {
+	protected void setMathResult(Game game, double deposit, String lang) throws LocaleKeyNotFound, GameNotFinished {
 		addField(getLocalText(lang, LocaleMessagesKeys.GAMES_GENERAL_DEPOSIT), String.format(DEPOSIT_SHOW_PATTERN,deposit), true);
 		if (game.isWin()) {
 			setWin(lang);

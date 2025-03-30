@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 
 import ru.kredwi.casinobot.exception.GameNotFinished;
 
-public class Shell implements IGames {
+public class Shell extends Game {
 
-	private static final Map<UUID, IGames> GAMES = new HashMap<>();
+	private static final Map<UUID, Game> GAMES = new HashMap<>();
 	
 	private final UUID gameUUID = UUID.randomUUID();
 	private final int gameNumber = RANDOM.nextInt(3);
@@ -40,7 +40,7 @@ public class Shell implements IGames {
 		return null;
 	}
 	
-	public IGames getShellGame(@NotNull UUID id) {
+	public Game getShellGame(@NotNull UUID id) {
 		return GAMES.get(id);
 	}
 

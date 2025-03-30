@@ -1,4 +1,4 @@
-package ru.kredwi.casinobot.events;
+package ru.kredwi.casinobot.listener;
 
 import java.util.Scanner;
 

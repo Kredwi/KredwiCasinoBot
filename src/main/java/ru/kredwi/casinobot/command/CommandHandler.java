@@ -12,11 +12,14 @@ import ru.kredwi.casinobot.CasinoBot;
 import ru.kredwi.casinobot.command.slash.BalanceCMD;
 import ru.kredwi.casinobot.command.slash.CoinCMD;
 import ru.kredwi.casinobot.command.slash.DiceCMD;
+import ru.kredwi.casinobot.command.slash.DuelCMD;
 import ru.kredwi.casinobot.command.slash.LanguageCMD;
+import ru.kredwi.casinobot.command.slash.RPSCMD;
 import ru.kredwi.casinobot.command.slash.SalaryCMD;
 import ru.kredwi.casinobot.command.slash.SlotCMD;
 import ru.kredwi.casinobot.command.slash.TopCMD;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
+import ru.kredwi.casinobot.game.data.RPSData;
 import ru.kredwi.casinobot.locale.LocaleMessagesKeys;
 import ru.kredwi.casinobot.locale.MainLocale;
 import ru.kredwi.casinobot.sql.JDBCActions;
@@ -25,18 +28,20 @@ public class CommandHandler {
 	
 	private static CommandHandler instance;
 	
+	private Map<String, RPSData> GAMES = new HashMap<>();
+	
 	private final Map<String, ISlashCommand> commands = new HashMap<String, ISlashCommand>();
 	
 	private CommandHandler() {
-		this.commands.put(ISlashCommand.SLOT_GAME_COMMAND, new SlotCMD());
-		this.commands.put(ISlashCommand.COIN_GAME_COMMAND, new CoinCMD());
-//		this.commands.put(ISlashCommand.RPS_GAME_COMMAND, new RPSCMD());
-		this.commands.put(ISlashCommand.DICE_GAME_COMMAND, new DiceCMD());
-//		this.commands.put(ISlashCommand.DUEL_GAME_COMMAND, new DuelCMD());
-		this.commands.put(ISlashCommand.BALANCE_COMMAND, new BalanceCMD());
-		this.commands.put(ISlashCommand.SALARY_COMMAND, new SalaryCMD());
-		this.commands.put(ISlashCommand.TOP_COMMAND, new TopCMD());
-		this.commands.put(ISlashCommand.LANGUAGE_COMMAND, new LanguageCMD());
+		ISlashCommand[] commands = new ISlashCommand[] {
+				new SlotCMD(), new CoinCMD(), new DiceCMD(),
+				new RPSCMD(), new BalanceCMD(), new SalaryCMD(),
+				new DuelCMD(), new TopCMD(), new LanguageCMD()
+		};
+		
+		for (ISlashCommand command : commands) {
+			this.commands.put(command.getData().getName(), command);
+		}
 	}
 	
 	public static CommandHandler getInstance() {
@@ -86,5 +91,12 @@ public class CommandHandler {
 			e.printStackTrace();
 			commandEvent.getHook().editOriginal("Oh... locale... no..").queue();;
 		}
+	}
+
+	public RPSData getGames(String gameID) {
+		return GAMES.get(gameID);
+	}
+	public void setGames(String gameID, RPSData data) {
+		this.GAMES.put(gameID, data);
 	}
 }

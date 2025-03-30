@@ -15,7 +15,7 @@ import ru.kredwi.casinobot.embeds.DiceEmbed;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
 import ru.kredwi.casinobot.games.Dice;
-import ru.kredwi.casinobot.games.IGames;
+import ru.kredwi.casinobot.games.Game;
 import ru.kredwi.casinobot.sql.JDBCActions;
 
 public class DiceCMD implements ISlashCommand, IErrorCommand  {
@@ -45,7 +45,7 @@ public class DiceCMD implements ISlashCommand, IErrorCommand  {
 			return;
 		} else JDBCActions.deleteUserBalance(user.getIdLong(), deposit);
 		
-		IGames game = new Dice((short)side);
+		Game game = new Dice((short)side);
 
 		try {
 			if (game.isWin()) {

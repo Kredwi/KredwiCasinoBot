@@ -5,7 +5,7 @@ import java.util.UUID;
 import ru.kredwi.casinobot.enums.CoinSide;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 
-public class Coin implements IGames {
+public class Coin extends Game {
 	
 	private final UUID gameUUID = UUID.randomUUID();
 	private final short botSide = (short) RANDOM.nextInt(CoinSide.values().length);

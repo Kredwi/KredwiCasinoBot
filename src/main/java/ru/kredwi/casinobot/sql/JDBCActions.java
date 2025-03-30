@@ -29,6 +29,8 @@ public class JDBCActions {
 			e.printStackTrace();
 		}
 	}
+	// auto increment is upping
+	// i rewrite this in next commit
 	public static final boolean addIfNotExistsUser(String language, String username, long discordId) {
 		String sql = "INSERT IGNORE INTO `users` (language, username, discord_id, salary) "
 				+ "VALUES (?, ?, ?, ?)";
@@ -153,7 +155,12 @@ public class JDBCActions {
 		return (int)getUserInformationFromColumn(LOSE_COLUMN, user);
 	}
 	public static final float getUserBalance(User user) {
-		return (float)getUserInformationFromColumn(BALANCE_COLUMN, user);
+		try {
+			return (float)getUserInformationFromColumn(BALANCE_COLUMN, user);	
+		} catch (ClassCastException e) {
+			return 0F;
+		}
+		
 	}
 	public static final Timestamp getUserDateSalary(User user) {
 		return (Timestamp) getUserInformationFromColumn(SALARY_COLUMN, user);

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import ru.kredwi.casinobot.exception.GameNotFinished;
 
-public class Duel implements IGames {
+public class Duel extends Game {
 	
 	private final UUID gameUUID = UUID.randomUUID();
 	private final int userPeak = RANDOM.nextInt(2);

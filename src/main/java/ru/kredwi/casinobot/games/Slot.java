@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import ru.kredwi.casinobot.exception.GameNotFinished;
 
-public class Slot implements IGames {
+public class Slot extends Game {
 	
 	private static final int[] DEFAULT_BOARD_SIZE = new int[] {3, 3};
 	private static final int[] MAX_BOARD_SIZE = new int[] {10, 10};

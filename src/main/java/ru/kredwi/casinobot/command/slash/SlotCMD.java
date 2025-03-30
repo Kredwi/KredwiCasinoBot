@@ -13,7 +13,7 @@ import ru.kredwi.casinobot.command.ISlashCommand;
 import ru.kredwi.casinobot.embeds.SlotEmbed;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
-import ru.kredwi.casinobot.games.IGames;
+import ru.kredwi.casinobot.games.Game;
 import ru.kredwi.casinobot.games.Slot;
 import ru.kredwi.casinobot.sql.JDBCActions;
 
@@ -36,7 +36,7 @@ public class SlotCMD implements ISlashCommand, IErrorCommand {
 			return;
 		} else JDBCActions.deleteUserBalance(user.getIdLong(), deposit);
 		
-		IGames slot = new Slot();
+		Game slot = new Slot();
 		
 		try {
 			if (slot.isWin()) {

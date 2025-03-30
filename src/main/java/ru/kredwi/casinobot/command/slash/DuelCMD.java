@@ -12,7 +12,7 @@ import ru.kredwi.casinobot.embeds.DuelEmbed;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
 import ru.kredwi.casinobot.games.Duel;
-import ru.kredwi.casinobot.games.IGames;
+import ru.kredwi.casinobot.games.Game;
 import ru.kredwi.casinobot.sql.JDBCActions;
 
 public class DuelCMD implements ISlashCommand, IErrorCommand {
@@ -38,7 +38,7 @@ public class DuelCMD implements ISlashCommand, IErrorCommand {
 			return;
 		} else JDBCActions.deleteUserBalance(user.getIdLong(), deposit);
 		
-		IGames game = new Duel();
+		Game game = new Duel();
 
 		try {
 			if (game.isWin()) {

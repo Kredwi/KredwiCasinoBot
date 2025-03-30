@@ -11,9 +11,11 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
+import ru.kredwi.casinobot.button.ButtonHandler;
 import ru.kredwi.casinobot.command.CommandHandler;
-import ru.kredwi.casinobot.events.ReadyListener;
-import ru.kredwi.casinobot.events.SlashCommandListener;
+import ru.kredwi.casinobot.listener.ButtonListener;
+import ru.kredwi.casinobot.listener.ReadyListener;
+import ru.kredwi.casinobot.listener.SlashCommandListener;
 import ru.kredwi.casinobot.sql.DBInitilization;
 
 /**
@@ -34,9 +36,12 @@ public class CasinoBot {
   
   private CommandHandler commandHandler;
   
-  public CasinoBot(DBInitilization dBInit, CommandHandler commandHandler) {
+  private ButtonHandler buttonHandler;
+  
+  public CasinoBot(DBInitilization dBInit, CommandHandler commandHandler, ButtonHandler buttonHandler) {
     this.dBInit = dBInit;
     this.commandHandler = commandHandler;
+    this.buttonHandler = buttonHandler;
   }
   
   public static void main( String[] args ) {
@@ -49,8 +54,9 @@ public class CasinoBot {
     
     DBInitilization database = new DBInitilization();
     CommandHandler commandHandler = CommandHandler.getInstance();
+    ButtonHandler buttonHandler = ButtonHandler.getInstance();
     
-    CasinoBot casinoBot = new CasinoBot(database, commandHandler);
+    CasinoBot casinoBot = new CasinoBot(database, commandHandler, buttonHandler);
     
     casinoBot.start();
     }
@@ -60,6 +66,7 @@ public class CasinoBot {
       jda = JDABuilder.createLight(config.getProperty("token"), getGatewayIntent())
 //          .addEventListeners(new MessageReceivedListener())
           .addEventListeners(new SlashCommandListener())
+          .addEventListeners(new ButtonListener())
           .addEventListeners(new ReadyListener())
           .setRequestTimeoutRetry(true)
           .build()

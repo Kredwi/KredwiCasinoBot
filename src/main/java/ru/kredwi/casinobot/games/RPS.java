@@ -5,22 +5,20 @@ import java.util.UUID;
 import ru.kredwi.casinobot.enums.RPSEnum;
 import ru.kredwi.casinobot.exception.GameNotFinished;
 
-public class RPS implements IGames {
+public class RPS extends Game {
 
 	private static final String[] ICONS = new String[] {
 			"🪨", "✂️", "🧻"
 	};
 	
 	private final UUID gameUUID = UUID.randomUUID();
-	private final short botChoice = (short) RANDOM.nextInt(RPSEnum.values().length);
 	
 	private RPSEnum[] gameResult = new RPSEnum[2];
 	private boolean win;
 	
-	
-	public RPS(String choice) {
-		gameResult[0] = RPSEnum.valueOf(choice); // is player
-		gameResult[1] = RPSEnum.values()[botChoice]; // is opponent
+	public RPS(String playerChoice, String opponentChoice) {
+		gameResult[0] = RPSEnum.valueOf(playerChoice); // is player
+		gameResult[1] = RPSEnum.valueOf(opponentChoice); // is opponent
 		if (isKill(gameResult[0], gameResult[1])) {
 			this.win = true;
 		}
