@@ -18,7 +18,7 @@ public class RPSSelectEmbed extends GameEmbedBuilder {
 		setDescription(String.format(getLocalText(lang, LocaleMessagesKeys.GAMES_RSP_SELECT_CHOICE), players.getLeft().getName()));
 		setColor(Color.LIGHT_GRAY);
 		setTimestamp(Instant.now());
-		addField("deposit", String.format(DEPOSIT_SHOW_PATTERN,deposit), true);
+		addField(getLocalText(lang, LocaleMessagesKeys.GAMES_GENERAL_DEPOSIT), String.format(DEPOSIT_SHOW_PATTERN,deposit), true);
 	}
 	
 }

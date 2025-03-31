@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
 import ru.kredwi.casinobot.Bot;
@@ -25,13 +24,8 @@ public class RPSCMD implements ISlashCommand, IErrorCommand {
 	
 	@Override
 	public SlashCommandData getData() {
-		OptionData option = new OptionData(OptionType.STRING, "choice", "Select your choice!", false)
-                .addChoice("ROCK", "ROCK")
-                .addChoice("PAPER", "PAPER")
-                .addChoice("SCISSORS", "SCISSORS");
 		return Commands.slash(RPS_GAME_COMMAND, "Play this happy game :)")
 				.addOption(OptionType.NUMBER, "deposit", "Write your deposit!", true)
-//				.addOptions(option)
 				.addOption(OptionType.USER, "opponent", "Select your opponent!");
 	}
 
@@ -60,10 +54,10 @@ public class RPSCMD implements ISlashCommand, IErrorCommand {
 			
 			RPSSelectEmbed embed = new RPSSelectEmbed(Pair.of(user, opponent), deposit, lang);
 			
-			commandEvent.getHook().editOriginal("").setEmbeds(embed.build()).setActionRow(buttons.getButtons()).queue();	
+			commandEvent.getHook().editOriginal("").setEmbeds(embed.build()).setActionRow(buttons.getButtons(lang)).queue();	
 		} catch (GameNotFinished|LocaleKeyNotFound e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			exception(commandEvent, e.getMessage(), lang);
 		}
 	}
 	private boolean isPlayersHaveNeedMoney(User playerOne, User playerTwo, double deposit) {

@@ -29,23 +29,44 @@ public class JDBCActions {
 			e.printStackTrace();
 		}
 	}
-	// auto increment is upping
-	// i rewrite this in next commit
 	public static final boolean addIfNotExistsUser(String language, String username, long discordId) {
-		String sql = "INSERT IGNORE INTO `users` (language, username, discord_id, salary) "
-				+ "VALUES (?, ?, ?, ?)";
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			
-			statement.setString(1, language);
-			statement.setString(2, username);
-			statement.setString(3, String.valueOf(discordId));
-			statement.setDate(4, Date.valueOf(LocalDate.now()));
+		if (!userIsExists(discordId, username)) {
+			String sql = "INSERT IGNORE INTO `users` (language, username, discord_id, salary) "
+					+ "VALUES (?, ?, ?, ?)";
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				
+				statement.setString(1, language);
+				statement.setString(2, username);
+				statement.setString(3, String.valueOf(discordId));
+				statement.setDate(4, Date.valueOf(LocalDate.now()));
 
-			return statement.executeUpdate() > 0;
-		} catch (SQLException e) {
-			e.printStackTrace();
+				return statement.executeUpdate() > 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return false;
+			}	
+		} else {
 			return false;
 		}
+	}
+	private static final boolean userIsExists(long discordId, String username) {
+		String sql = "SELECT COUNT(*) FROM `users` WHERE `discord_id` = ? AND `username` = ?";
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			
+			statement.setString(1, String.valueOf(discordId));
+			statement.setString(2, username);
+
+			ResultSet resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				return resultSet.getInt(1) > 0;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+				
 	}
 	private static final boolean updateUserInformation(String column, long discordId, Object number, char operation) {
 		

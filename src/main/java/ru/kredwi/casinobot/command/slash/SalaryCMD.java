@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import ru.kredwi.casinobot.command.IErrorCommand;
 import ru.kredwi.casinobot.command.ISlashCommand;
 import ru.kredwi.casinobot.embeds.alerts.AlertEmbed;
 import ru.kredwi.casinobot.embeds.alerts.ErrorEmbed;
@@ -17,7 +18,7 @@ import ru.kredwi.casinobot.locale.LocaleMessagesKeys;
 import ru.kredwi.casinobot.locale.MainLocale;
 import ru.kredwi.casinobot.sql.JDBCActions;
 
-public class SalaryCMD implements ISlashCommand {
+public class SalaryCMD implements ISlashCommand, IErrorCommand {
 	
 	private static final int DAY_OF_MS = 86_400_000;
 	private static final int SALARY = 2_123;
@@ -57,8 +58,8 @@ public class SalaryCMD implements ISlashCommand {
 				commandEvent.getHook().editOriginal("").setEmbeds(errorEmbed.build()).queue();
 			}
 		} catch (LocaleKeyNotFound e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			exception(commandEvent, e.getMessage(), lang);
 		}
 	}
 

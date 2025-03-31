@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
-import ru.kredwi.casinobot.button.ButtonHandler;
 import ru.kredwi.casinobot.command.CommandHandler;
 import ru.kredwi.casinobot.listener.ButtonListener;
 import ru.kredwi.casinobot.listener.ReadyListener;
@@ -36,12 +35,9 @@ public class CasinoBot {
   
   private CommandHandler commandHandler;
   
-  private ButtonHandler buttonHandler;
-  
-  public CasinoBot(DBInitilization dBInit, CommandHandler commandHandler, ButtonHandler buttonHandler) {
+  public CasinoBot(DBInitilization dBInit, CommandHandler commandHandler) {
     this.dBInit = dBInit;
     this.commandHandler = commandHandler;
-    this.buttonHandler = buttonHandler;
   }
   
   public static void main( String[] args ) {
@@ -54,9 +50,8 @@ public class CasinoBot {
     
     DBInitilization database = new DBInitilization();
     CommandHandler commandHandler = CommandHandler.getInstance();
-    ButtonHandler buttonHandler = ButtonHandler.getInstance();
     
-    CasinoBot casinoBot = new CasinoBot(database, commandHandler, buttonHandler);
+    CasinoBot casinoBot = new CasinoBot(database, commandHandler);
     
     casinoBot.start();
     }

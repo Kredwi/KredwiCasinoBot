@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import ru.kredwi.casinobot.command.IErrorCommand;
 import ru.kredwi.casinobot.command.ISlashCommand;
 import ru.kredwi.casinobot.embeds.alerts.AlertEmbed;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
@@ -14,7 +15,7 @@ import ru.kredwi.casinobot.locale.LocaleMessagesKeys;
 import ru.kredwi.casinobot.locale.MainLocale;
 import ru.kredwi.casinobot.sql.JDBCActions;
 
-public class BalanceCMD implements ISlashCommand {
+public class BalanceCMD implements ISlashCommand, IErrorCommand {
 	
 	@Override
 	public SlashCommandData getData() {
@@ -35,8 +36,8 @@ public class BalanceCMD implements ISlashCommand {
 			
 			commandEvent.getHook().editOriginal("").setEmbeds(rewardEmbed.build()).queue();
 		} catch (LocaleKeyNotFound e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			exception(commandEvent, e.getMessage(), lang);
 		}
 	}
 

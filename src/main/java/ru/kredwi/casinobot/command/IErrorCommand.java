@@ -1,7 +1,7 @@
 package ru.kredwi.casinobot.command;
 
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.callbacks.IDeferrableCallback;
 import ru.kredwi.casinobot.CasinoBot;
 import ru.kredwi.casinobot.embeds.alerts.ErrorEmbed;
 import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
@@ -18,7 +18,7 @@ public interface IErrorCommand {
 			return new ErrorEmbed(e.getMessage()).build();
 		}
 	}
-	default void exception(SlashCommandInteractionEvent commandEvent, String message, String lang) {
+	default void exception(IDeferrableCallback commandEvent, String message, String lang) {
 		MessageEmbed embed = new ErrorEmbed("Locale error", "So very bad....").build();
 		
 		try {

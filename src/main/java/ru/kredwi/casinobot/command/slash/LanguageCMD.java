@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import ru.kredwi.casinobot.command.IErrorCommand;
 import ru.kredwi.casinobot.command.ISlashCommand;
 import ru.kredwi.casinobot.embeds.alerts.AlertEmbed;
 import ru.kredwi.casinobot.embeds.alerts.ErrorEmbed;
@@ -18,7 +19,7 @@ import ru.kredwi.casinobot.locale.LocaleMessagesKeys;
 import ru.kredwi.casinobot.locale.MainLocale;
 import ru.kredwi.casinobot.sql.JDBCActions;
 
-public class LanguageCMD implements ISlashCommand {
+public class LanguageCMD implements ISlashCommand, IErrorCommand {
 	
 	private static final String languageCodeKey = "language_code";
 	
@@ -62,8 +63,8 @@ public class LanguageCMD implements ISlashCommand {
 			}
 			commandEvent.getHook().editOriginal("").setEmbeds(embed.build()).queue();
 		} catch (LocaleKeyNotFound e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			exception(commandEvent, e.getMessage(), lang);
 		}
 	}
 }

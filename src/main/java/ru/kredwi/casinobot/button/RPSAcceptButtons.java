@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.internal.utils.tuple.Pair;
 import ru.kredwi.casinobot.Bot;
 import ru.kredwi.casinobot.command.CommandHandler;
+import ru.kredwi.casinobot.command.IErrorCommand;
 import ru.kredwi.casinobot.embeds.rps.RPSResultEmbed;
 import ru.kredwi.casinobot.embeds.rps.RPSSelectEmbed;
 import ru.kredwi.casinobot.enums.RPSEnum;
@@ -19,15 +20,15 @@ import ru.kredwi.casinobot.games.Game;
 import ru.kredwi.casinobot.games.RPS;
 import ru.kredwi.casinobot.sql.JDBCActions;
 
-public class RPSAcceptButtons {
+public class RPSAcceptButtons implements IErrorCommand {
 	
-	public Button[] getButtons() {
+	public Button[] getButtons(String lang) throws LocaleKeyNotFound {
 		
 		
 		return new Button[] { 
-				ButtonHandler.getInstance().getButton("rps_paper_button"),
-				ButtonHandler.getInstance().getButton("rps_scissors_button"),
-				ButtonHandler.getInstance().getButton("rps_stone_button")
+				ButtonHandler.getInstance().getLocalizationButton("rps_paper_button", lang),
+				ButtonHandler.getInstance().getLocalizationButton("rps_scissors_button", lang),
+				ButtonHandler.getInstance().getLocalizationButton("rps_stone_button", lang)
 		};
 	}
 	
@@ -36,7 +37,7 @@ public class RPSAcceptButtons {
 		String lang = JDBCActions.getUserLanguage(data.getPlayer());
 		try {
 			if (data.getPlayerChoice() == null) {
-				data.setPlayerChoice(getEnumType(event.getButton().getId()));
+				data.setPlayerChoice(getEnumTypeFromButtonId(event.getButton().getId()));
 				
 				if (data.getOpponent() instanceof Bot) {
 					JDBCActions.deleteUserBalance(data.getPlayer().getIdLong(), data.getDeposit());
@@ -51,47 +52,38 @@ public class RPSAcceptButtons {
 			if (data.getOpponentChoice() == null) {
 				JDBCActions.deleteUserBalance(data.getPlayer().getIdLong(), data.getDeposit());
 				JDBCActions.deleteUserBalance(data.getOpponent().getIdLong(), data.getDeposit());
-				runGame(data, getEnumType(event.getButton().getId()), lang, event);
+				runGame(data, getEnumTypeFromButtonId(event.getButton().getId()), lang, event);
 			}
 		} catch (GameNotFinished|LocaleKeyNotFound e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			exception(event, e.getMessage(), lang);
 		}
 		
 	}
 	
-	private void runGame(RPSData data, RPSEnum opponentChoice, String lang, IDeferrableCallback callback) throws LocaleKeyNotFound {
+	private void runGame(RPSData data, RPSEnum opponentChoice, String lang, IDeferrableCallback callback) throws LocaleKeyNotFound, GameNotFinished {
 		data.setOpponentChoice(opponentChoice);
 		RPS game = new RPS(data.getPlayerChoice().name(), data.getOpponentChoice().name());
+		RPSEnum[] choices = ((RPSEnum[]) game.getGameResult());
+
+		Pair<User, RPSEnum> player = Pair.of(data.getPlayer(), choices[0]);
+		Pair<User, RPSEnum> player2 = Pair.of(data.getOpponent(), choices[1]);
 		
-		try {
-			RPSEnum[] choices = ((RPSEnum[]) game.getGameResult());
-
-			Pair<User, RPSEnum> player = Pair.of(data.getPlayer(), choices[0]);
-			Pair<User, RPSEnum> player2 = Pair.of(data.getOpponent(), choices[1]);
+		if (choices[0].equals(choices[1])) {
+			executeSendMessage(true, data, game, player, player2, lang, callback);
 			
-			if (choices[0].equals(choices[1])) {
-				
-				executeSendMessage(true, data, game, player, player2, lang, callback);
-				
-				JDBCActions.addUserBalance(data.getPlayer().getIdLong(), data.getDeposit());
-				if (!(data.getOpponent() instanceof Bot)) {
-					JDBCActions.addUserBalance(data.getOpponent().getIdLong(), data.getDeposit());
-				}
-				return; // stop next execute
+			JDBCActions.addUserBalance(data.getPlayer().getIdLong(), data.getDeposit());
+			if (!(data.getOpponent() instanceof Bot)) {
+				JDBCActions.addUserBalance(data.getOpponent().getIdLong(), data.getDeposit());
 			}
-			
-			if (game.isWin()) {
-				changePlayerStats(game, data.getDeposit(), player.getLeft().getIdLong(), player2.getLeft().getIdLong());
-				executeSendMessage(false, data, game, player, player2, lang, callback);
-			} else {
-				changePlayerStats(game, data.getDeposit(), player2.getLeft().getIdLong(), player.getLeft().getIdLong());
-				executeSendMessage(false, data, game, player2, player, lang, callback);
-
-			}
-		} catch (GameNotFinished e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return; // stop next execute
+		}
+		
+		if (game.isWin()) {
+			changePlayerStats(game, data.getDeposit(), player.getLeft().getIdLong(), player2.getLeft().getIdLong());
+			executeSendMessage(false, data, game, player, player2, lang, callback);
+		} else {
+			changePlayerStats(game, data.getDeposit(), player2.getLeft().getIdLong(), player.getLeft().getIdLong());
+			executeSendMessage(false, data, game, player2, player, lang, callback);
 		}
 	}
 	private void executeSendMessage(boolean isDraw, RPSData data, Game game, Pair<User, RPSEnum> winner, Pair<User, RPSEnum> loser, String lang, IDeferrableCallback callback) throws GameNotFinished, LocaleKeyNotFound {
@@ -99,7 +91,7 @@ public class RPSAcceptButtons {
 		callback.getHook().editOriginal("").setEmbeds(embed.build()).setComponents().queue();		
 	}
 	
-	private RPSEnum getEnumType(String id) {
+	private RPSEnum getEnumTypeFromButtonId(String id) {
 		switch (id) {
 			case "rps_paper_button": {
 				return RPSEnum.PAPER;

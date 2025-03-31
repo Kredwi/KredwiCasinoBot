@@ -39,7 +39,6 @@ public class TopCMD implements ISlashCommand, IErrorCommand {
 			
 			AlertEmbed embed = new AlertEmbed(title, builder.toString().trim());
 			
-			
 			commandEvent.getHook().editOriginal("").setEmbeds(embed.build()).queue();
 		} catch (LocaleKeyNotFound e) {
 			exception(commandEvent, "Locale key is not found", lang);

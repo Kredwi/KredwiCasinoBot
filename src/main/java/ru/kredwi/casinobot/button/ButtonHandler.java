@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import ru.kredwi.casinobot.button.rps.RPSPaperButton;
 import ru.kredwi.casinobot.button.rps.RPSScissorsButton;
 import ru.kredwi.casinobot.button.rps.RPSStoneButton;
+import ru.kredwi.casinobot.exception.LocaleKeyNotFound;
 
 public class ButtonHandler {
 	
@@ -41,6 +42,10 @@ public class ButtonHandler {
 	
 	public Button getButton(String buttonID) {
 		return this.allButton.get(buttonID).getData();
+	}
+	
+	public Button getLocalizationButton(String buttonID, String lang) throws LocaleKeyNotFound {
+		return this.allButton.get(buttonID).getLozalizatedButton(lang);
 	}
 	
 }
