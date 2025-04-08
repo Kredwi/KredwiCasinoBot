@@ -34,8 +34,13 @@ public class RPSCMD implements ISlashCommand, IErrorCommand {
 		
 		OptionMapping opponentOption = commandEvent.getOption("opponent");
 		double deposit = commandEvent.getOption("deposit").getAsDouble();
-		final User opponent = opponentOption != null ? opponentOption.getAsUser() : botInstance;
-		final User user = commandEvent.getUser();
+		
+		User opponent = opponentOption != null ? opponentOption.getAsUser() : botInstance;
+		User user = commandEvent.getUser();
+		
+		if (user.getId().equals(opponent.getId())) {
+			opponent = botInstance;
+		}
 		
 		try {
 			

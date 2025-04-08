@@ -45,6 +45,7 @@ public enum LocaleMessagesKeys {
 	GAMES_RSP_BUTTON_PAPER,
 	GAMES_RSP_BUTTON_ROCK,
 	GAMES_RSP_BUTTON_SCISSORS,
+	
 	GAMES_DUEL_RESULT;
 	
 	public String getPath() {

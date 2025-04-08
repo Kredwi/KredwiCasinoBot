@@ -33,7 +33,7 @@ public class RPSResultEmbed extends GameEmbedBuilder {
 	}
 	
 	private void setDraw(Game game, Pair<User, RPSEnum> player1, Pair<User, RPSEnum> player2, String lang) throws LocaleKeyNotFound {
-		setTitle(getLocalText(lang, LocaleMessagesKeys.GAMES_GENERAL_DOUBLE_WIN));
+		setTitle(getLocalText(lang, LocaleMessagesKeys.GAMES_GENERAL_DRAW));
 		setDescription(getFormatedMessage(game, player1, player2, lang));
 		setColor(Color.CYAN);
 	}

@@ -35,22 +35,39 @@ public class RPSAcceptButtons implements IErrorCommand {
 	public void execute(ButtonInteractionEvent event) {
 		RPSData data = CommandHandler.getInstance().getGames(event.getHook().getId());
 		String lang = JDBCActions.getUserLanguage(data.getPlayer());
+		
 		try {
+			
+			User player = data.getPlayer();
+			User opponent = data.getOpponent();
+			
+			if (!player.getId().equals(event.getUser().getId())) {
+				if (!opponent.getId().equals(event.getUser().getId())) {
+					return;	
+				}
+			}
+			
 			if (data.getPlayerChoice() == null) {
+				if (!player.getId().equals(event.getUser().getId())) {
+					return;
+				}
 				data.setPlayerChoice(getEnumTypeFromButtonId(event.getButton().getId()));
 				
 				if (data.getOpponent() instanceof Bot) {
-					JDBCActions.deleteUserBalance(data.getPlayer().getIdLong(), data.getDeposit());
+					JDBCActions.deleteUserBalance(player.getIdLong(), data.getDeposit());
 					runGame(data, this.getRandomRPS(), lang, event);
 					return; // stop next execute
 				}
-				RPSSelectEmbed embed = new RPSSelectEmbed(Pair.of(data.getOpponent(), data.getPlayer()), data.getDeposit(), lang);
+				RPSSelectEmbed embed = new RPSSelectEmbed(Pair.of(data.getOpponent(), player), data.getDeposit(), lang);
 				event.getHook().editOriginal("").setEmbeds(embed.build()).queue();
 				
 				return; // stop next execute
 			}
 			if (data.getOpponentChoice() == null) {
-				JDBCActions.deleteUserBalance(data.getPlayer().getIdLong(), data.getDeposit());
+				if (!opponent.getId().equals(event.getUser().getId())) {
+					return;
+				}
+				JDBCActions.deleteUserBalance(player.getIdLong(), data.getDeposit());
 				JDBCActions.deleteUserBalance(data.getOpponent().getIdLong(), data.getDeposit());
 				runGame(data, getEnumTypeFromButtonId(event.getButton().getId()), lang, event);
 			}
